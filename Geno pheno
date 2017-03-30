@@ -39,7 +39,7 @@ while(det finnes en i hvor A[i] != -1)
 	La B være indexen til alle jobbene hvor current task ønsker å starte før earliest_job, på samme maskin. Inkludert earliest_job
 	choosen_job = Finn den jobben i B som forekommer først i genomet. !Slett elementet fra genomet!
 	Legg til choosen_job i schedulen
-	A[choosen_job]++;
+	A[choosen_job]++; Sett 
 	
 	
 		
