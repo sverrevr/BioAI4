@@ -1,0 +1,45 @@
+La program dataen være på formen:
+vector< Job> Jobs;
+Define Job as vector<Tasks>
+Define Task as:
+	//Gitt av oppgaven
+	machine;
+	process_time;
+	//Variabel vi jobber på
+	start_time
+	
+La genotypen være på formen:
+	Vektor av job id-er. Hver jobb forekommer like mange ganger som den har tasks. 
+	Så første gang en jobb forekommer reffererer den til første task i den jobben, andre gang til andre tasken. 
+  
+La phenotypen, schedulen være på formen:
+vector<machine> Schedule
+definer machine as vector<schedule_tasks>
+definer scheduling_task as:
+	start_time;
+	process_time;
+	jobb_id;
+	task_id;
+	
+Nye entries i schedulen legges til bakerst på angitt maskin. Må legge til slik at hvis i<j er i sin start_time+process_time < j sin start_time
+Fitness beregnes som høyeste start_time+process_time blandt siste element i hver maskin.
+
+
+Overgangen geno->pheno
+Lag en kopi av genomet som vi kan jobbe på. 
+La A være en vektor med en inex for hver av jobbene. Indexen er oppgaven vi nå er på i den jobben, start med denne lik 0.
+Sett for alle i Jobs[i][A[i]].start_time = 0. (A[i] er på dette tidspunktet lik 0 for alle i]. 
+
+while(det finnes en i hvor A[i] != -1)
+	For alle i:
+		J[i][A[i]].start_time = max(J[i][A[i-1]).(start_time+process_time) , se på schedulen på samme maskin: start_time+process_time 
+			siste elementet der)
+
+	earliest_jobb = til jobben hvor tasken vi nå ser på (utifra indexen den jobben har hos A), har lavest start_time + process_time.
+	La B være indexen til alle jobbene hvor current task ønsker å starte før earliest_job, på samme maskin. Inkludert earliest_job
+	choosen_job = Finn den jobben i B som forekommer først i genomet. !Slett elementet fra genomet!
+	Legg til choosen_job i schedulen
+	A[choosen_job]++;
+	
+	
+		
