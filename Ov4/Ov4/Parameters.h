@@ -1,3 +1,3 @@
 #pragma once
 
-#define FILENAME "Data\\1.txt"
+#define FILENAME "Data\\6.txt"

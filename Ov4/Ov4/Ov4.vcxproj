@@ -118,6 +118,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bees.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="readData.cpp" />
     <ClCompile Include="scheduleBuilder.cpp" />
@@ -126,6 +127,7 @@
     <None Include="..\..\Geno pheno" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bees.h" />
     <ClInclude Include="Parameters.h" />
     <ClInclude Include="readData.h" />
     <ClInclude Include="scheduleBuilder.h" />

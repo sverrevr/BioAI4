@@ -2,18 +2,16 @@
 #include <iostream>
 #include <sstream>
 #include "readData.h"
+#include "scheduleBuilder.h"
 
 using namespace std;
 
-void readFile(Jobs* jobs) {
+void Jobs::readFile() {
 	fstream file(FILENAME);
 	if (!file.is_open()) {
 		cout << "Could not open file.\n";
 		return;
 	}
-
-	int numJobs;
-	int numMachines;
 
 	string line;
 	stringstream ss_line;
@@ -25,7 +23,7 @@ void readFile(Jobs* jobs) {
 	ss_line.clear();
 
 
-	jobs->jobs = vector<vector<Task>>(numJobs, vector<Task>());
+	jobs = vector<vector<Task>>(numJobs, vector<Task>());
 	int machine_id;
 	float process_time;
 	int taskId;
@@ -36,12 +34,12 @@ void readFile(Jobs* jobs) {
 		while (!ss_line.eof()) {
 			ss_line >> machine_id;
 			ss_line >> process_time;
-			jobs->jobs[job_id].push_back(Task(machine_id,job_id,taskId,process_time));
+			jobs[job_id].push_back(Task(machine_id,job_id,taskId,process_time));
 			taskId++;
 		}
 		ss_line.str(string());
 		ss_line.clear();
 	}
-	jobs->current_job_index = vector<char>(numJobs, 0);
+	current_job_index = vector<char>(numJobs, 0);
 
 }

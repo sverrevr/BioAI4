@@ -1,4 +1,6 @@
 #include "scheduleBuilder.h"
+#include <iostream>
+#include <Windows.h>
 
 using namespace std;
 
@@ -14,10 +16,7 @@ void scheduleBuilder(Jobs& jobs, vector<char> genom, vector<vector<Task>>* sched
 	}
 
 	//resetter jobs
-	for (int i = 0; i < jobs.size(); ++i){
-		jobs.current_job_index[i] = 0;
-		jobs[i].start_time = 0;
-	}
+	jobs.reset();
 
 
 	while (!jobs.isFinished()) {
@@ -92,4 +91,58 @@ void scheduleBuilder(Jobs& jobs, vector<char> genom, vector<vector<Task>>* sched
 
 	}
 
+}
+
+void printSchedule(vector<char> genom,Jobs& jobs) {
+	vector<vector<Task>> schedule(jobs.read_numMachines(), vector<Task>());
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	scheduleBuilder(jobs, genom, &schedule);
+
+	float worstFinishTime = 0;
+	for (auto machine = schedule.begin(); machine != schedule.end(); ++machine) {
+		if (machine->at(machine->size()-1).start_time + machine->at(machine->size()-1).process_time > worstFinishTime) {
+			worstFinishTime = machine->at(machine->size()-1).start_time + machine->at(machine->size()-1).process_time;
+		}
+	}
+
+	cout << "Finish time: " << worstFinishTime << endl;
+
+	int t;
+	int dt=INT_MAX;
+
+	//finn minste tidssteg som korteste duration
+	/*for (int i = 0; i < schedule.size(); ++i) {
+		for (int j = 0; j < schedule[i].size(); ++j) {
+			if (schedule[i][j].process_time < dt) {
+				dt = schedule[i][j].process_time;
+			}
+		}
+	}
+	*/
+	dt = 1; //blir domt med partall oddetall mismatch
+
+	char out;
+	for (int i = 0; i < schedule.size(); ++i) {
+		t = 0;
+		for (int j = 0; j < schedule[i].size(); ++j) {
+			while (t < schedule[i][j].start_time) {
+				SetConsoleTextAttribute(hConsole, 15);
+				cout << "  ";
+				t+=dt;
+			}
+			while (t < schedule[i][j].start_time + schedule[i][j].process_time) {
+				t+=dt;
+				SetConsoleTextAttribute(hConsole, 15 - (schedule[i][j].job_id % 15));
+				if (schedule[i][j].job_id <= 9) {
+					out = schedule[i][j].job_id + '0';
+				}
+				else {
+					out = schedule[i][j].job_id - 10 + 'a';
+				}
+				cout << out << ' ';
+			}
+		}
+		cout << endl;
+	}
+	SetConsoleTextAttribute(hConsole, 15);
 }

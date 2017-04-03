@@ -20,8 +20,15 @@ struct Task {
 };
 
 struct Jobs {
+private:
 	std::vector<std::vector<Task>> jobs;
 	std::vector<char> current_job_index;
+
+	int numMachines;
+	int numJobs;
+public:
+	int read_numMachines() { return numMachines; }
+
 	Task& operator[](char job_index) {
 		return jobs[job_index][current_job_index[job_index]];
 	}
@@ -38,8 +45,18 @@ struct Jobs {
 		current_job_index[job_index]++;
 	}
 
+	void reset() {
+		for (int i = 0; i < jobs.size(); ++i) {
+			current_job_index[i] = 0;
+			jobs[i][0].start_time = 0;
+		}
+	}
+
 	int size() {
 		return jobs.size();
+	}
+	int size(int i) {
+		return jobs[i].size();
 	}
 	bool isFinished() {
 		for (int i = 0; i < jobs.size(); ++i) {
@@ -50,7 +67,10 @@ struct Jobs {
 		return true;
 	}
 
+	void readFile();
+
 };
 
 
 void scheduleBuilder(Jobs& jobs, std::vector<char> genom, std::vector<std::vector<Task>>* schedule);
+void printSchedule(std::vector<char> genom, Jobs& jobs);
