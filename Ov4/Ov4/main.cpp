@@ -6,6 +6,7 @@
 #include <ctime>
 #include <cstdlib>
 #include "Bees.h"
+#include "PSO.h"
 
 using namespace std;
 
@@ -15,16 +16,9 @@ int main() {
 	Jobs jobs;
 	jobs.readFile();
 	
-	bees(&jobs);
+	//bees(&jobs);
+	pso(&jobs);
 
-	vector<char> genom;
-	for (int i = 0; i < 6; ++i) {
-		for (int j = 0; j < 6; ++j) {
-			genom.push_back(j);
-		}
-	}
-
-	printSchedule(genom, jobs);
 	system("PAUSE");
 	return 0;
 }

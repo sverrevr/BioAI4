@@ -74,3 +74,4 @@ public:
 
 void scheduleBuilder(Jobs& jobs, std::vector<char> genom, std::vector<std::vector<Task>>* schedule);
 void printSchedule(std::vector<char> genom, Jobs& jobs);
+float getMakespan(std::vector<std::vector<Task>> schedule, Jobs& jobs);

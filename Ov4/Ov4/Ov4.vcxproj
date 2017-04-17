@@ -120,6 +120,7 @@
   <ItemGroup>
     <ClCompile Include="Bees.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PSO.cpp" />
     <ClCompile Include="readData.cpp" />
     <ClCompile Include="scheduleBuilder.cpp" />
   </ItemGroup>
@@ -129,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="Bees.h" />
     <ClInclude Include="Parameters.h" />
+    <ClInclude Include="PSO.h" />
     <ClInclude Include="readData.h" />
     <ClInclude Include="scheduleBuilder.h" />
   </ItemGroup>

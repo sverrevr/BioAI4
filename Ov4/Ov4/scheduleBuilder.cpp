@@ -146,3 +146,14 @@ void printSchedule(vector<char> genom,Jobs& jobs) {
 	}
 	SetConsoleTextAttribute(hConsole, 15);
 }
+
+
+float getMakespan(vector<vector<Task>> schedule, Jobs& jobs) {
+	float worstFinishTime = 0;
+	for (auto machine = schedule.begin(); machine != schedule.end(); ++machine) {
+		if (machine->at(machine->size() - 1).start_time + machine->at(machine->size() - 1).process_time > worstFinishTime) {
+			worstFinishTime = machine->at(machine->size() - 1).start_time + machine->at(machine->size() - 1).process_time;
+		}
+	}
+	return worstFinishTime;
+}
