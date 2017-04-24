@@ -1,8 +1,12 @@
 #include "scheduleBuilder.h"
 #include <iostream>
+#include <fstream>
 #include <Windows.h>
+#include <string>
 
 using namespace std;
+
+
 
 
 //Jobs må være constructed med current_job_index
@@ -104,7 +108,9 @@ void printSchedule(vector<char> genom,Jobs& jobs) {
 			worstFinishTime = machine->at(machine->size()-1).start_time + machine->at(machine->size()-1).process_time;
 		}
 	}
-
+	ofstream myfile;
+	myfile.open("../Gantt.csv");
+	myfile << "Task,Start,Duration,Job,Machine\n";
 	cout << "Finish time: " << worstFinishTime << endl;
 
 	int t;
@@ -125,6 +131,12 @@ void printSchedule(vector<char> genom,Jobs& jobs) {
 	for (int i = 0; i < schedule.size(); ++i) {
 		t = 0;
 		for (int j = 0; j < schedule[i].size(); ++j) {
+			myfile << "Task " + to_string(i*schedule[i].size() + j) + ',' 
+				+ to_string(schedule[i][j].start_time) + ',' 
+				+ to_string(schedule[i][j].process_time) + ',' 
+				+ to_string(schedule[i][j].job_id) + ',' 
+				+ to_string(schedule[i][j].machine_id) + '\n';
+			
 			while (t < schedule[i][j].start_time) {
 				SetConsoleTextAttribute(hConsole, 15);
 				cout << "  ";
@@ -157,3 +169,4 @@ float getMakespan(vector<vector<Task>> schedule, Jobs& jobs) {
 	}
 	return worstFinishTime;
 }
+

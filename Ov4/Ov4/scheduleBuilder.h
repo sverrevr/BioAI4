@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 
+
 struct Task {
 	//for å bruke Tasks i jobs og schedule har vi med machine, jobb og task
 	float start_time;
