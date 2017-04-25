@@ -4,7 +4,7 @@ df <- read.csv("Gantt.csv", stringsAsFactors = F)
 
 
 client    <- "Sample Client"
-#cols      <- RColorBrewer::brewer.pal(length(unique(df$Job)), name = "Set3")
+#palette from http://tools.medialab.sciences-po.fr/iwanthue/
 cols <- palette(c(rgb(93,192,138, maxColorValue=255),
 rgb(184,91,200, maxColorValue=255),
 rgb(96,182,71, maxColorValue=255),
