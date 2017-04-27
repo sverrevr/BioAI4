@@ -16,8 +16,8 @@ int main() {
 	Jobs jobs;
 	jobs.readFile();
 	
-	bees(&jobs);
-	//pso(&jobs);
+	//bees(&jobs);
+	pso(&jobs);
 
 	system("PAUSE");
 	return 0;

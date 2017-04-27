@@ -22,7 +22,7 @@ void Jobs::readFile() {
 	ss_line.str(string());
 	ss_line.clear();
 
-
+	
 	jobs = vector<vector<Task>>(numJobs, vector<Task>());
 	int machine_id;
 	float process_time;

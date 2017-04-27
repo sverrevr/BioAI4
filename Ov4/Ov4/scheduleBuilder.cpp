@@ -112,7 +112,7 @@ void printSchedule(vector<char> genom,Jobs& jobs) {
 	myfile.open("../Gantt.csv");
 	myfile << "Task,Start,Duration,Job,Machine\n";
 	cout << "Finish time: " << worstFinishTime << endl;
-
+	
 	int t;
 	int dt=INT_MAX;
 
@@ -157,6 +157,7 @@ void printSchedule(vector<char> genom,Jobs& jobs) {
 		cout << endl;
 	}
 	SetConsoleTextAttribute(hConsole, 15);
+	myfile.close();
 }
 
 

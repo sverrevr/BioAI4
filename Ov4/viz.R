@@ -5,26 +5,9 @@ df <- read.csv("Gantt.csv", stringsAsFactors = F)
 
 client    <- "Sample Client"
 #palette from http://tools.medialab.sciences-po.fr/iwanthue/
-cols <- palette(c(rgb(93,192,138, maxColorValue=255),
-rgb(184,91,200, maxColorValue=255),
-rgb(96,182,71, maxColorValue=255),
-rgb(113,99,207, maxColorValue=255),
-rgb(179,181,56, maxColorValue=255),
-rgb(214,67,148, maxColorValue=255),
-rgb(53,132,90, maxColorValue=255),
-rgb(212,63,86, maxColorValue=255),
-rgb(72,182,210, maxColorValue=255),
-rgb(207,80,44, maxColorValue=255),
-rgb(101,128,198, maxColorValue=255),
-rgb(219,146,52, maxColorValue=255),
-rgb(153,80,139, maxColorValue=255),
-rgb(98,128,52, maxColorValue=255),
-rgb(213,143,206, maxColorValue=255),
-rgb(140,120,42, maxColorValue=255),
-rgb(184,88,107, maxColorValue=255),
-rgb(191,175,109, maxColorValue=255),
-rgb(156,91,45, maxColorValue=255),
-rgb(228,139,113, maxColorValue=255)))
+#cols <- RColorBrewer::brewer.pal(length(unique(df$Job)), name = "Set3")
+cols <- palette(rainbow(length(unique(df$Job))))
+cols <- palette(rainbow(length(unique(df$Job)))) #er en bug som gjor at det maa kjoeres 2 ganger
 df$color  <- factor(df$Job, labels = cols)
 
 
