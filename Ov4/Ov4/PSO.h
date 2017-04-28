@@ -43,7 +43,6 @@ struct Poppulation{
 		gb = particles[0].state;
 		gb_makespan = INFINITY;
 	}
-
 	void update();
 };
 

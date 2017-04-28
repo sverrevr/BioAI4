@@ -20,9 +20,13 @@ struct Task {
 	}
 };
 
+
+typedef std::vector<std::vector<Task>> schedule_t;
+
+
 struct Jobs {
 private:
-	std::vector<std::vector<Task>> jobs;
+	schedule_t jobs;
 	std::vector<char> current_job_index;
 
 	int numMachines;
@@ -73,6 +77,9 @@ public:
 };
 
 
-void scheduleBuilder(Jobs& jobs, std::vector<char> genom, std::vector<std::vector<Task>>* schedule);
+void scheduleBuilder(Jobs& jobs, std::vector<char> genom, schedule_t* schedule);
 void printSchedule(std::vector<char> genom, Jobs& jobs);
-float getMakespan(std::vector<std::vector<Task>> schedule, Jobs& jobs);
+float getMakespan(schedule_t schedule, Jobs& jobs);
+
+void getProcessingTimes(Jobs& jobs, std::vector<char> genom, std::vector<int> tabu, std::vector<float>* processTimes);
+

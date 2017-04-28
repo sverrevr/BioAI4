@@ -11,7 +11,7 @@ using namespace std;
 
 //Jobs må være constructed med current_job_index
 //schedule må være constructed til å ha riktig antall maskiner
-void scheduleBuilder(Jobs& jobs, vector<char> genom, vector<vector<Task>>* schedule) {
+void scheduleBuilder(Jobs& jobs, vector<char> genom, schedule_t* schedule) {
 	// Vi skal endre på genomet lokalt så må taes inn som copy
 
 	//tømmer schedulen
@@ -98,7 +98,7 @@ void scheduleBuilder(Jobs& jobs, vector<char> genom, vector<vector<Task>>* sched
 }
 
 void printSchedule(vector<char> genom,Jobs& jobs) {
-	vector<vector<Task>> schedule(jobs.read_numMachines(), vector<Task>());
+	schedule_t schedule(jobs.read_numMachines(), vector<Task>());
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	scheduleBuilder(jobs, genom, &schedule);
 
@@ -161,7 +161,7 @@ void printSchedule(vector<char> genom,Jobs& jobs) {
 }
 
 
-float getMakespan(vector<vector<Task>> schedule, Jobs& jobs) {
+float getMakespan(schedule_t schedule, Jobs& jobs) {
 	float worstFinishTime = 0;
 	for (auto machine = schedule.begin(); machine != schedule.end(); ++machine) {
 		if (machine->at(machine->size() - 1).start_time + machine->at(machine->size() - 1).process_time > worstFinishTime) {
@@ -170,4 +170,10 @@ float getMakespan(vector<vector<Task>> schedule, Jobs& jobs) {
 	}
 	return worstFinishTime;
 }
+
+void getProcessingTimes(Jobs& jobs, std::vector<char> genom, vector<int> tabu, vector<float>* processTimes) {
+	return;
+}
+
+
 

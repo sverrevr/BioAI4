@@ -118,6 +118,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ant.cpp" />
     <ClCompile Include="Bees.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PSO.cpp" />
@@ -128,6 +129,7 @@
     <None Include="..\..\Geno pheno" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ant.h" />
     <ClInclude Include="Bees.h" />
     <ClInclude Include="Parameters.h" />
     <ClInclude Include="PSO.h" />

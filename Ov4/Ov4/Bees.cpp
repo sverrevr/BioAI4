@@ -68,14 +68,14 @@ void bees(Jobs* jobs) {
 
 
 void calcPoppulationFinishTime(vector<Solution>& poppulation, Jobs* jobs) {
-	vector<vector<Task>> schedule(jobs->read_numMachines(), vector<Task>());
+	schedule_t schedule(jobs->read_numMachines(), vector<Task>());
 
 	for (int i = 0; i < poppulation.size(); ++i) {
 		calcFinishTime(&(poppulation[i]), &schedule, jobs);
 	}
 }
 
-void calcFinishTime(Solution* sol, vector<vector<Task>>* schedule, Jobs* jobs) {
+void calcFinishTime(Solution* sol, schedule_t* schedule, Jobs* jobs) {
 	float worstFinishTime;
 	scheduleBuilder(*jobs, sol->gene, schedule);
 	worstFinishTime = 0;
@@ -90,7 +90,7 @@ void calcFinishTime(Solution* sol, vector<vector<Task>>* schedule, Jobs* jobs) {
 
 void localSearch(Solution* sol, int num, Jobs* jobs) {
 	//TODO skal vi gjøre noe som innfører at flowerpatchen endrer størrelse?
-	vector<vector<Task>> schedule(jobs->read_numMachines(), vector<Task>());
+	schedule_t schedule(jobs->read_numMachines(), vector<Task>());
 	float prevFinishTime = sol->finish_time;
 	int r1;
 	int r2;	

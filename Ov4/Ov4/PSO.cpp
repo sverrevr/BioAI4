@@ -76,7 +76,7 @@ void Particle::calcMakespan() {
 	vector<char> genom;
 	makeGenom(&genom,state);
 
-	std::vector<std::vector<Task>> schedule(jobs->read_numMachines(), vector<Task>());
+	schedule_t schedule(jobs->read_numMachines(), vector<Task>());
 	scheduleBuilder(*jobs, genom, &schedule);
 
 	makespan = getMakespan(schedule, *jobs);
