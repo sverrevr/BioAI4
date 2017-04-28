@@ -27,11 +27,11 @@ typedef std::vector<std::vector<Task>> schedule_t;
 struct Jobs {
 private:
 	schedule_t jobs;
-	std::vector<char> current_job_index;
 
 	int numMachines;
 	int numJobs;
 public:
+	std::vector<char> current_job_index;
 	int read_numMachines() { return numMachines; }
 
 	Task& operator[](char job_index) {

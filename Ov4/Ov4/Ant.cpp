@@ -1,6 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
-
+#include <cmath>
 
 #include "Ant.h"
 #include "Parameters.h"
@@ -10,8 +10,8 @@
 using namespace std;
 
 void ants(Jobs* jobs) {
-	Solution feasableSolution;
-
+	Solution feasableSolution; //Bees
+	
 	const int n = jobs->size();
 	int total_operations = 0;
 	vector<vector<vector<float>>> phi; //pheromone
@@ -38,15 +38,9 @@ void ants(Jobs* jobs) {
 	}
 
 	vector<Solution> colony(K_ANTS, feasableSolution); //Bees men må lages
-	
-	//init random poppulation
-	for (int i = 0; i < K_ANTS; ++i) {
-		random_shuffle(colony[i].gene.begin(), colony[i].gene.end()); //Bees
-	}
-	//calcPoppulationFinishTime(colony, jobs);
-	//sort(colony.begin(), colony.end()); //ToDo: remove, doesn't make sense
-
-
+	Solution bestSolution;
+	bestSolution.finish_time = INFINITY;
+	Jobs job_copy = *jobs;
 	int itterations = 0;
 	int maxNumItterations = 0;
 	int input;
@@ -55,7 +49,7 @@ void ants(Jobs* jobs) {
 		bool dec_rule[K_ANTS];
 
 		for (int k = 0; k < K_ANTS; ++k) {
-			Jobs tabu = *jobs; //copy so start-times can be set
+			Jobs tabu = job_copy; //copy so start-times can be set, bruke reset?
 			//vector<int> tabu(n,0);
 			
 			colony[k].gene.clear();
@@ -66,22 +60,73 @@ void ants(Jobs* jobs) {
 			// Random choice, longest or shortest processing time
 			dec_rule[k] = rand() % 2;
 			//3.3 while tabu_k not full
+			
+			schedule_t schedule(tabu.read_numMachines(), vector<Task>());
 			while (colony[k].gene.size() < total_operations) {
-				continue;
-			}
+				//kalkuler start_time
+				for (int i = 0; i < tabu.size(); ++i) {
+					//hvis vi har fullført denne jobben, hopp til neste
+					if (!tabu.canIndex(i)) continue;
 
+					float job_end_time = 0;
+					float machine_end_time = 0;
+					//Hvis det er oppgaver før denne i denne jobben
+					if (tabu.canIndexPrev(i)) {
+						//Skriv ned når den fullførte
+						job_end_time = tabu.getPrevTask(i).start_time + tabu.getPrevTask(i).process_time;
+					}
+					//hvis det er jobber lagt til på denne maskinen
+					int machine_size = schedule.at(tabu[i].machine_id).size();
+					if (machine_size) {
+						//skriv ned når maskinen blir ledig
+						machine_end_time = schedule.at(tabu[i].machine_id)[machine_size - 1].start_time +
+							schedule.at(tabu[i].machine_id)[machine_size - 1].process_time;
+					}
+					tabu[i].start_time = max(job_end_time, machine_end_time);
+				}
+
+				//ToDo: Endre så det veksler mellom short og long
+				float bestVal = INFINITY;
+				int best_id = -1;
+				vector<float> tau_ij(n, 0.0);
+				float total = 0.0;
+				for (int i = 0; i < tabu.size(); ++i) {				
+					if (!tabu.canIndex(i)) continue;
+					tau_ij[i] += phi[i][tabu.current_job_index[i]][i];
+					total += pow(tau_ij[i], ALPHA)*pow(tabu[i].process_time, BETHA);
+				}
+				for (int i = 0; i < tabu.size(); ++i) {
+					if (!tabu.canIndex(i)) continue;
+					float p_ij = pow(tau_ij[i], ALPHA)*pow(tabu[i].process_time, BETHA)/total;
+					if (p_ij < bestVal) {
+						bestVal = p_ij;
+						best_id = i;
+					}
+				}
+				schedule.at(tabu[best_id].machine_id).push_back(tabu[best_id]);
+				tabu.increment(best_id);
+				colony[k].gene.push_back(best_id);
+			}
+		
 		}
 
 		
-
+ 		calcPoppulationFinishTime(colony, jobs);
+		
+		for (int k = 0; k < K_ANTS; ++k) {
+			if (colony[k] < bestSolution) {
+				bestSolution = colony[k];
+			}
+		}
+		
 		//----------------skriv ut og sånt her.------------------------
-		cout << colony[0].finish_time << ' ';
+		cout << bestSolution.finish_time << ' ';
 		if (itterations >= maxNumItterations) {
-			cout << "\n\n" << colony[0].finish_time << "\n\n";
+			cout << "\n\n" << bestSolution.finish_time << "\n\n";
 			cout << "[0]Print solution, [1, ...] more itterations: ";
 			cin >> input;
 			if (input == 0) {
-				printSchedule(colony[0].gene, *jobs);
+				printSchedule(bestSolution.gene, *jobs);
 			}
 			else {
 				maxNumItterations = itterations + input;
@@ -91,3 +136,5 @@ void ants(Jobs* jobs) {
 		//-------------------------------------------------------------
 	}
 }
+
+
