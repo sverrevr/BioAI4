@@ -1,6 +1,6 @@
 #pragma once
 
-#define FILENAME "Data\\3.txt"
+#define FILENAME "Data\\1.txt"
 
 
 //PSO
@@ -16,7 +16,6 @@
 #define ALPHA 0.2
 #define BETHA 0.8
 #define RHO 0.7
-#define K_ANTS 3 //or K=numJobs/2 
 #define PHERO_MAX 0.1 //Max value at init
-#define Q 1 
+#define Q 1
 
