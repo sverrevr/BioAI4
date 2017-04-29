@@ -171,9 +171,5 @@ float getMakespan(schedule_t schedule, Jobs& jobs) {
 	return worstFinishTime;
 }
 
-void getProcessingTimes(Jobs& jobs, std::vector<char> genom, vector<int> tabu, vector<float>* processTimes) {
-	return;
-}
-
 
 

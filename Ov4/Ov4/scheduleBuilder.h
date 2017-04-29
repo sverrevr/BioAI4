@@ -81,5 +81,4 @@ void scheduleBuilder(Jobs& jobs, std::vector<char> genom, schedule_t* schedule);
 void printSchedule(std::vector<char> genom, Jobs& jobs);
 float getMakespan(schedule_t schedule, Jobs& jobs);
 
-void getProcessingTimes(Jobs& jobs, std::vector<char> genom, std::vector<int> tabu, std::vector<float>* processTimes);
 

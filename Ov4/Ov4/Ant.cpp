@@ -53,6 +53,8 @@ void ants(Jobs* jobs) {
 			//vector<int> tabu(n,0);
 			
 			colony[k].gene.clear();
+			
+			//Add random task
 			colony[k].gene.push_back(rand() % n);
 			tabu.increment(colony[k].gene[0]);
 
@@ -107,18 +109,24 @@ void ants(Jobs* jobs) {
 				tabu.increment(best_id);
 				colony[k].gene.push_back(best_id);
 			}
-		
-		}
-
-		
- 		calcPoppulationFinishTime(colony, jobs);
-		
-		for (int k = 0; k < K_ANTS; ++k) {
+			calcFinishTime(&colony[k],&schedule,&tabu);
+			
+			//3.4 find best, update pheromone
 			if (colony[k] < bestSolution) {
 				bestSolution = colony[k];
 			}
+			vector<char> current_job_index(n,0);
+			for (int i = 0; i < colony[k].gene.size(); ++i) {
+				
+				for (int j = 0; j < n; ++j) {
+					delta_phi[j] [current_job_index[j]] [colony[k].gene[i]] += Q / colony[k].finish_time;
+				}
+				current_job_index[ colony[k].gene[i] ]++;
+			}
 		}
-		
+
+
+
 		//----------------skriv ut og sånt her.------------------------
 		cout << bestSolution.finish_time << ' ';
 		if (itterations >= maxNumItterations) {
