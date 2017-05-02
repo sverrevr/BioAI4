@@ -17,5 +17,5 @@ struct Solution{
 
 void bees(Jobs* jobs);
 void calcPoppulationFinishTime(std::vector<Solution>& poppulation, Jobs* jobs);
-void calcFinishTime(Solution* sol, std::vector<std::vector<Task>>* schedule, Jobs* jobs);
+void calcFinishTime(Solution* sol, schedule_t* schedule, Jobs* jobs);
 void localSearch(Solution* sol, int num, Jobs* jobs);

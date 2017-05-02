@@ -1,6 +1,6 @@
 #pragma once
 
-#define FILENAME "Data\\5.txt"
+#define FILENAME "Data\\6.txt"
 
 
 //PSO
@@ -10,3 +10,12 @@
 #define DT 1
 #define MIN_VAL (float)0
 #define MAX_VAL (float)100
+
+//ACO
+
+#define ALPHA 0.2
+#define BETHA 0.8
+#define RHO 0.7
+#define PHERO_MAX 0.1 //Max value at init
+#define Q 1
+

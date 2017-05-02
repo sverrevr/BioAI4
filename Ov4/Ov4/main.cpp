@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include "Bees.h"
 #include "PSO.h"
+#include "Ant.h"
 
 using namespace std;
 
@@ -17,7 +18,8 @@ int main() {
 	jobs.readFile();
 	
 	//bees(&jobs);
-	pso(&jobs);
+	//pso(&jobs);
+	ants(&jobs);
 
 	system("PAUSE");
 	return 0;
