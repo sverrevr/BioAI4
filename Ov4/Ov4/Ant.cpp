@@ -10,7 +10,6 @@
 using namespace std;
 
 void ants(Jobs* jobs) {
-	Solution feasableSolution; //Bees
 	
 	const int n = jobs->size();
 	const int m = jobs->read_numMachines();
@@ -24,8 +23,7 @@ void ants(Jobs* jobs) {
 	for (char job = 0; job < n; ++job) {
 		vector<vector<float>> pher_i;
 		vector<vector<float>> delta_i;
-		for (int task = 0; task < jobs->size(job); ++task) {
-			feasableSolution.gene.push_back(job); //Bees
+		for (int task = 0; task <= jobs->size(job); ++task) {
 			vector<float> pher_j;
 			vector<float> delta_j;
 			total_operations = n*jobs->size(job);
@@ -40,7 +38,7 @@ void ants(Jobs* jobs) {
 		delta_phi.push_back(delta_i);
 	}
 
-	vector<Solution> colony(K_ANTS, feasableSolution); //Bees men må lages
+	vector<Solution> colony(K_ANTS); //Bees men må lages
 	Solution bestSolution;
 	bestSolution.finish_time = INFINITY;
 	Jobs job_copy = *jobs; //ToDo, sjekk om nødvendig... 
@@ -90,23 +88,26 @@ void ants(Jobs* jobs) {
 					tabu[i].start_time = max(job_end_time, machine_end_time);
 				}
 
-				float bestVal = (dec_rule ? INFINITY : 0) ;
+				//float bestVal = (dec_rule ? INFINITY : 0) ;
+				float bestVal = 0;
 				int best_id = -1;
 				vector<float> tau_ij(n, 0.0);
 				float tau_sum = 0.0;
-				for (int i = 0; i < tabu.size(); ++i) {				
+				for (int i = 0; i < tabu.size(); ++i) {
 					if (!tabu.canIndex(i)) continue;
-					tau_ij[i] += phi[i][tabu.current_job_index[i]][i];
-					tau_sum += pow(tau_ij[i], ALPHA)*pow(tabu[i].process_time, BETHA);
+					tau_ij[i] += phi[colony[k].gene.back()][tabu.current_job_index[colony[k].gene.back()]][i];
+					tau_sum += pow(tau_ij[i], ALPHA)*pow(1 / (tabu[i].start_time + tabu[i].process_time), BETHA);
 				}
 				for (int i = 0; i < tabu.size(); ++i) {
 					if (!tabu.canIndex(i)) continue;
-					float p_ij = pow(tau_ij[i], ALPHA)*pow(tabu[i].process_time, BETHA)/tau_sum;
-					if (dec_rule ? (p_ij < bestVal) : (p_ij > bestVal) ){
+					float p_ij = pow(tau_ij[i], ALPHA)*pow(1 / (tabu[i].start_time + tabu[i].process_time), BETHA) / tau_sum;
+					//if (dec_rule ? (p_ij < bestVal) : (p_ij > bestVal) ){
+					if (p_ij > bestVal) {
 						bestVal = p_ij;
 						best_id = i;
 					}
 				}
+				
 				schedule.at(tabu[best_id].machine_id).push_back(tabu[best_id]);
 				tabu.increment(best_id);
 				colony[k].gene.push_back(best_id);
@@ -118,25 +119,25 @@ void ants(Jobs* jobs) {
 				bestSolution = colony[k];
 			}
 			vector<char> current_job_index(n,0);
-			for (int i = 0; i < colony[k].gene.size(); ++i) {
+			for (int i = 1; i < colony[k].gene.size(); ++i) {
 				
-				for (int j = 0; j < n; ++j) {
-					if (current_job_index[j]>= m) continue;  //ToDo: sjekk om dette er rett 
-					delta_phi[j] [current_job_index[j]] [colony[k].gene[i]] += Q / colony[k].finish_time; //Eq. 3
-				}
+				if (current_job_index[colony[k].gene[i - 1]]> m) continue;  //ToDo: sjekk om dette er rett 
+				delta_phi[colony[k].gene[i-1]] [current_job_index[colony[k].gene[i - 1]]] [colony[k].gene[i]] += Q / colony[k].finish_time; //Eq. 3
+				
 				current_job_index[ colony[k].gene[i] ]++;
 			}
 		}
 
 		//3.5 Update pheromone
 		for (int i = 0; i < n; ++i) {
-			for (int j = 0; j < m; ++j) {
+			for (int j = 0; j <= m; ++j) {
 				for (int edge_index = 0; edge_index < n; ++edge_index) {
 					phi[i][j][edge_index] = delta_phi[i][j][edge_index] + RHO*phi[i][j][edge_index]; //Eq. 2
 					delta_phi[i][j][edge_index] = 0; //reset delta_phi
 				}
 			}
 		}
+
 
 
 
