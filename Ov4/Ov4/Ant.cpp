@@ -42,13 +42,12 @@ void ants(Jobs* jobs) {
 	vector<Solution> colony(K_ANTS); 
 	Solution bestSolution;
 	bestSolution.finish_time = INFINITY;
-	Jobs job_copy = *jobs; //ToDo, sjekk om nødvendig... 
+	Jobs job_copy = *jobs;  
 	int itterations = 0;
 	int maxNumItterations = 0;
 	int input;
 	while (1) {
-		vector<bool> dec_rule;
-		dec_rule.reserve(K_ANTS);
+
 
 		for (int k = 0; k < K_ANTS; ++k) {
 			Jobs tabu = job_copy; //copy so start-times can be set, bruke reset?
@@ -60,9 +59,7 @@ void ants(Jobs* jobs) {
 			colony[k].gene.push_back(rand() % n);
 			tabu.increment(colony[k].gene[0]);
 
-			//3.2 Define decidabilty rule for each ant
-			// Random choice, longest or shortest processing time
-			bool dec_rule= rand() % 2;
+			//3.2 ignored
 			//3.3 while tabu_k not full
 			
 			schedule_t schedule(tabu.read_numMachines(), vector<Task>());
@@ -89,7 +86,6 @@ void ants(Jobs* jobs) {
 					tabu[i].start_time = max(job_end_time, machine_end_time);
 				}
 
-				//float bestVal = (dec_rule ? INFINITY : 0) ;
 				float totVal = 0;
 
 				int best_id = -1;
@@ -110,7 +106,7 @@ void ants(Jobs* jobs) {
 					pair.index = i;
 					roulette.push_back(pair);
 				}
-				roulette.back().end = 1; //Decimal error makes 
+				roulette.back().end = 1; //Decimal error makes laste interval lower than 1
 				float choice = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 				for (int i = 0; i < roulette.size(); ++i) {
 					if (roulette[i].isInIntervall(choice)) {
@@ -132,7 +128,7 @@ void ants(Jobs* jobs) {
 			vector<char> current_job_index(n,0);
 			for (int i = 1; i < colony[k].gene.size(); ++i) {
 				
-				if (current_job_index[colony[k].gene[i - 1]]> m) continue;  //ToDo: sjekk om dette er rett 
+				if (current_job_index[colony[k].gene[i - 1]]> m) continue;  
 				delta_phi[colony[k].gene[i-1]] [current_job_index[colony[k].gene[i - 1]]] [colony[k].gene[i]] += Q / colony[k].finish_time; //Eq. 3
 				
 				current_job_index[ colony[k].gene[i] ]++;
