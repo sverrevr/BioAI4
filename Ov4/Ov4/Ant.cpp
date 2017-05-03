@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <cmath>
 
+
 #include "Ant.h"
 #include "Parameters.h"
 #include "scheduleBuilder.h"
@@ -28,7 +29,7 @@ void ants(Jobs* jobs) {
 			vector<float> delta_j;
 			total_operations = n*jobs->size(job);
 			for (int j = 0; j < n; ++j) {
-				pher_j.push_back(((double)rand() / (RAND_MAX / PHERO_MAX)));
+				pher_j.push_back(((double)rand() / (RAND_MAX / PHERO_INIT)));
 				delta_j.push_back(0);
 			}
 			pher_i.push_back(pher_j);
@@ -38,7 +39,7 @@ void ants(Jobs* jobs) {
 		delta_phi.push_back(delta_i);
 	}
 
-	vector<Solution> colony(K_ANTS); //Bees men må lages
+	vector<Solution> colony(K_ANTS); 
 	Solution bestSolution;
 	bestSolution.finish_time = INFINITY;
 	Jobs job_copy = *jobs; //ToDo, sjekk om nødvendig... 
@@ -89,9 +90,11 @@ void ants(Jobs* jobs) {
 				}
 
 				//float bestVal = (dec_rule ? INFINITY : 0) ;
-				float bestVal = 0;
+				float totVal = 0;
+
 				int best_id = -1;
 				vector<float> tau_ij(n, 0.0);
+				vector <Interval> roulette;
 				float tau_sum = 0.0;
 				for (int i = 0; i < tabu.size(); ++i) {
 					if (!tabu.canIndex(i)) continue;
@@ -100,11 +103,19 @@ void ants(Jobs* jobs) {
 				}
 				for (int i = 0; i < tabu.size(); ++i) {
 					if (!tabu.canIndex(i)) continue;
-					float p_ij = pow(tau_ij[i], ALPHA)*pow(1 / (tabu[i].start_time + tabu[i].process_time), BETHA) / tau_sum;
-					//if (dec_rule ? (p_ij < bestVal) : (p_ij > bestVal) ){
-					if (p_ij > bestVal) {
-						bestVal = p_ij;
-						best_id = i;
+					Interval pair;
+					pair.start = totVal;
+					totVal += (pow(tau_ij[i], ALPHA)*pow(1 / (tabu[i].start_time + tabu[i].process_time), BETHA) / tau_sum);
+					pair.end = totVal;
+					pair.index = i;
+					roulette.push_back(pair);
+				}
+				roulette.back().end = 1; //Decimal error makes 
+				float choice = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+				for (int i = 0; i < roulette.size(); ++i) {
+					if (roulette[i].isInIntervall(choice)) {
+						best_id = roulette[i].index;
+						break;
 					}
 				}
 				
@@ -133,7 +144,24 @@ void ants(Jobs* jobs) {
 			for (int j = 0; j <= m; ++j) {
 				for (int edge_index = 0; edge_index < n; ++edge_index) {
 					phi[i][j][edge_index] = delta_phi[i][j][edge_index] + RHO*phi[i][j][edge_index]; //Eq. 2
+					if (phi[i][j][edge_index] < PHERO_MIN) phi[i][j][edge_index] = PHERO_MIN;
+					if (phi[i][j][edge_index] > PHERO_MAX) phi[i][j][edge_index] = PHERO_MAX;
+
 					delta_phi[i][j][edge_index] = 0; //reset delta_phi
+				}
+			}
+		}
+		for (int k = 0; k < K_ANTS; ++k) {
+			localSearch(&(colony[k]), ceil(MAX_LOCALSEARCHES*(1 - k / K_ANTS)), jobs);
+			if (colony[k] < bestSolution) {
+				bestSolution = colony[k];
+				vector<char> current_job_index(n, 0);
+				for (int i = 1; i < colony[k].gene.size(); ++i) {
+
+					if (current_job_index[colony[k].gene[i - 1]]> m) continue;
+					delta_phi[colony[k].gene[i - 1]][current_job_index[colony[k].gene[i - 1]]][colony[k].gene[i]] += Q / colony[k].finish_time; //Eq. 3
+
+					current_job_index[colony[k].gene[i]]++;
 				}
 			}
 		}

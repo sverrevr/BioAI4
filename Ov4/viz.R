@@ -1,6 +1,6 @@
 library(plotly)
 setwd("C:\\Users\\eirik\\OneDrive\\Dokumenter\\NTNU\\IT3708\\JSSP\\Ov4")   # set working directory
-df <- read.csv("Gantt.csv", stringsAsFactors = F)
+df <- read.csv("Gantt_PSO_1229.csv", stringsAsFactors = F)
 
 
 client    <- "Sample Client"
@@ -28,7 +28,7 @@ for(i in 1:(nrow(df))){
 								"Start:", df$Start[i], "<br>",
                               	"Duration: ", df$Duration[i], "<br>"
                               ),#df$Task[i]),
-                 evaluate = T
+			evaluate = T
   )
 }
 
